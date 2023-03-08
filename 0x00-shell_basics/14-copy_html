@@ -1,0 +1,4 @@
+#!/bin/bash
+cwd =$(pwd)
+parent=$(0x00-shell_basics "$cwd")
+cp -n -u "$cwd"/*.html "$parent"
