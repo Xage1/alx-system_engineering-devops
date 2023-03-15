@@ -1,2 +1,2 @@
 #!/bin/bash
-true_knowledge=$TRUEKNOWLEDGE results=$((128 + true_knowledge)) echo "$result"
+results=$(echo "scale=2 $POWER/$DIVIDE" | bc) echo "$result"
