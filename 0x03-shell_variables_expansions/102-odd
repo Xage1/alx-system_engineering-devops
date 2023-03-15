@@ -1,2 +1,2 @@
 #!/bin/bash
-filename=$1 | awk 'NR%2==1' $filename
+grep -n '' | grep -E '^[0-9]*[^02468]:'
