@@ -1,0 +1,2 @@
+#!/bin/bash
+bestchol=$(echo "ibase=water , obase=bestchol , ${WATER}+${STIR}" echo "$bestchol"
