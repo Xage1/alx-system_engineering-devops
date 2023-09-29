@@ -3,12 +3,12 @@
 # eternity unless it is killed, not so ethernal after all :)
 
 # Handle SIGTERM
-trap "echo 'I am invincible!!!'" 15
+trap "echo 'I am invincible!!!'" SIGTERM
 
 
 # print the message forever
 while true;
 do
-	echo "To infinity and beyond";
+	echo "To infinity and beyond"
 	sleep 2
 done

@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# Function to handle cleanup
+cleanup() {
+    echo "I hate the kill command"
+    rm -f /var/run/myscript.pid
+    exit 0
+}
+
+# Function to handle SIGINT signal (Ctrl+C)
+sigint_handler() {
+    echo "Y U no love me?!"
+}
+
+# Function to handle SIGTERM and SIGQUIT signals
+sigterm_quit_handler() {
+    echo "I hate the kill command"
+    rm -f /var/run/myscript.pid
+    exit 0
+}
+
+# Check if the PID file already exists
+if [ -f /var/run/myscript.pid ]; then
+    echo "PID file already exists. Exiting."
+    exit 1
+fi
+
+# Write the script's PID to the PID file
+echo $$ > /var/run/myscript.pid
+
+# Set up signal handlers
+trap 'sigint_handler' SIGINT
+trap 'sigterm_quit_handler' SIGTERM SIGQUIT
+
+# Main loop
+while true; do
+    echo "To infinity and beyond"
+    sleep 1
+done
