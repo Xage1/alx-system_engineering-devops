@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# This script displays directory contents with only the part after the first dash
+
+for item in *; do
+	if [ -d "$item" ] && [[ ! "$item" =~ ^\..* ]]; then
+		name_part="${item#* -}"
+		echo "$name_part"
+	fi
+done
