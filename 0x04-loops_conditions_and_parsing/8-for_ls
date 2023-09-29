@@ -2,9 +2,7 @@
 
 # This script displays directory contents with only the part after the first dash
 
-for item in *; do
-	if [ -d "$item" ] && [[ ! "$item" =~ ^\..* ]]; then
-		name_part="${item#* -}"
-		echo "$name_part"
-	fi
+for i in *
+do
+	echo "$i" | cut -d'-' -f2
 done

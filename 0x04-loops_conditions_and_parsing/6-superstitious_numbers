@@ -4,7 +4,7 @@
 
 count=1
 
-while [ $count -le 20 ]; do
+while [ $count -lt 21 ]; do
     case $count in
         4)
             echo "$count"
@@ -22,5 +22,5 @@ while [ $count -le 20 ]; do
             echo "$count"
             ;;
     esac
-    count=$((count + 1))
+    let count+=1
 done
