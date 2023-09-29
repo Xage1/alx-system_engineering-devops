@@ -22,5 +22,5 @@ while [ $count -lt 21 ]; do
             echo "$count"
             ;;
     esac
-    let count+=1
+    ((count+=1))
 done
