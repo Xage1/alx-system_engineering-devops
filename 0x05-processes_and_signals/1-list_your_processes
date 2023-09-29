@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# This script displays a list of currently running processes in a user-oriented format
+
+# Define column headers
+echo "USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND"
+
+# Use 'ps' command to list all processes, show user-oriented format
+ps axo user,pid,%cpu,%mem,vsz,rss,tty,stat,start,time,command | head -n 50
