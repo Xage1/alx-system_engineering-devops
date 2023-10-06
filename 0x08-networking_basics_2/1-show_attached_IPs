@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# This Bash script retrieves the IPv4 addresses of network interfaces using 'ifconfig'
 
 # Use 'ifconfig' to get network interface information and extract IPv4 addresses
 ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*)' | awk '{print $2}' | sed 's/addr://'
