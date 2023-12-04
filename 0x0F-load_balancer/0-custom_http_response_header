@@ -1,47 +1,31 @@
 #!/usr/bin/env bash
-# script to install and setup nginx
-CONFIG_FILE="/etc/nginx/sites-available/default"
-HOST_NAME=$(hostname)
-MY_ID=496
+# Configure Nginx so that its HTTP response contains a custom header (on web-01 and web-02)
+# The name of the custom HTTP header must be X-Served-By
+# The value of the custom HTTP header must be the hostname of the server Nginx is running on
+sudo apt-get update
+sudo apt-get -y install nginx
 
-# check if hostname is correct
-if [[ $(hostname) =~ ^$MY_ID-web-[0-9]+ ]]; then
-    echo 'hostname properly configured'
-else
-    (>&2 echo 'hostname not configured properly...')
-    (>&2 echo 'please set hostname to pattern: 496-web-<server_id>...')
-    (>&2 echo 'Example: sudo hostnamectl set-hostname 496-web-<insert_server_id_here>')
-fi
+# configure firewall to allow request through port 80
+sudo ufw allow 'Nginx HTTP'
 
-# install nginx
-apt-get -y update
-apt-get -y install nginx
+sudo mkdir -p /var/www/html
 
-# update index.html file
-echo 'Holberton School' > /usr/share/nginx/html/index.html
-echo "Ceci n'est pas une page" > /usr/share/nginx/html/404.html
+# change permissions to allow us to easily create files in this directory
+sudo chmod -R 755 /var/www
 
-# update config file to redirect
-printf %s "server {
-    listen 80;
-    listen [::]:80 default_server;
-    root   /usr/share/nginx/html;
-    index  index.html index.htm;
+#  create the index page
+echo 'Hello World!' |sudo tee  /var/www/html/index.html
 
-    add_header X-Served-By $HOST_NAME;
+# create a webpage for error 404
+echo "Ceci n'est pas une page" |sudo tee /var/www/html/404.html
 
-    location /redirect_me {
-        return 301 http://google.com/;
-    }
+# code to configure redirect for a single page(/redirect_me) and add header to display hostname
+string_for_replacement="server_name _;\n\tadd_header X-Served-By \$hostname;\n\trewrite ^\/redirect_me https:\/\/www.blog.ehoneahobed.com permanent;"
+sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
 
-    error_page 404 /404.html;
-    location /404 {
-      root /usr/share/nginx/html;
-      internal;
-    }
-}" > $CONFIG_FILE
+# code to configure redirect for 404 error page
+string_for_replacement="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
+sudo sed -i "s/listen 80 default_server;/$string_for_replacement/" /etc/nginx/sites-enabled/default
 
-# start nginx after reloading config
-service nginx start
-# if nginx was already running restart it
-service nginx restart
+# restart the web server after updating the settings
+sudo service nginx restart
