@@ -1,42 +1,6 @@
-#!/bin/bash
-
-# Update package list and install Nginx
-apt-get update
-apt-get install -y nginx
-
-# Ensure Nginx is running
-systemctl start nginx
-
-# Check if Nginx is running and listening on port 80
-nginx_status=$(ss -tln | grep ':80')
-
-if [ -n "$nginx_status" ]; then
-    echo "Nginx is running and listening on port 80"
-else
-    echo "Nginx is not running or not listening on port 80"
-    exit 1
-fi
-
-# Obtain active IPv4 IPs
-ipv4_addresses=$(ip -o -4 addr show scope global | awk '{split($4, a, "/"); print a[1]}')
-
-# Configure Nginx to listen on port 80 for all active IPv4 IPs
-for ip_address in $ipv4_addresses; do
-    echo "server {
-    listen $ip_address:80;
-    server_name _;
-    location / {
-        root /usr/share/nginx/html;
-        index index.html index.htm;
-    }
-}" > /etc/nginx/sites-available/default
-done
-
-# Reload Nginx to apply the configuration changes
-systemctl reload nginx
-
-# Test if Nginx is now accessible on port 80
-curl -sS 0:80
-
-# Clean up
-apt-get clean
+#!/usr/bin/env bash
+#configure nginx server to listen for port 80
+#this is spam
+#this is spam
+sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default
+service nginx restart
