@@ -1,38 +1,37 @@
 #!/usr/bin/python3
 
 """
-Python script uses a  REST API, for a given employee ID and returns information
+Python script that, using a REST API, for a given employee ID,
+returns information about his/her TODO list progress.
 """
-import requests
-import sys
 
-def get_employee_data(employee_id):
-    base_url = "https://jsonplaceholder.typicode.com"
+from requests import get
+from sys import argv
 
-    # Fetch user details
-    user_response = requests.get(f"{base_url}/users/{employee_id}")
-    user_data = user_response.json()
-    employee_name = user_data.get('name')
-
-    # Fetch TODO list for the user
-    todo_response = requests.get(f"{base_url}/todos?userId={employee_id}")
-    todo_data = todo_response.json()
-
-    # Calculate number of completed tasks
-    completed_tasks = [task for task in todo_data if task['completed']]
-    num_completed_tasks = len(completed_tasks)
-    total_tasks = len(todo_data)
-
-    # Display information
-    print(f"Employee {employee_name} is done with tasks({num_completed_tasks}/{total_tasks}):")
-
-    for task in completed_tasks:
-        print(f"\t {task['title']}")
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2 or not sys.argv[1].isdigit():
-        print("Usage: python3 0-gather_data_from_an_API.py <employee_id>")
-        sys.exit(1)
+    response = get('https://jsonplaceholder.typicode.com/todos/')
+    data = response.json()
+    completed = 0
+    total = 0
+    tasks = []
+    response2 = get('https://jsonplaceholder.typicode.com/users')
+    data2 = response2.json()
 
-    employee_id = int(sys.argv[1])
-    get_employee_data(employee_id)
+    for i in data2:
+        if i.get('id') == int(argv[1]):
+            employee = i.get('name')
+
+    for i in data:
+        if i.get('userId') == int(argv[1]):
+            total += 1
+
+            if i.get('completed') is True:
+                completed += 1
+                tasks.append(i.get('title'))
+
+    print("Employee {} is done with tasks({}/{}):".format(employee, completed,
+                                                          total))
+
+    for i in tasks:
+        print("\t {}".format(i))
