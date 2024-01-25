@@ -1,3 +1,4 @@
+# Server configuration file for task 2
 server {
     listen 80;
     server_name 52.23.245.79;
